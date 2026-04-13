@@ -10,10 +10,8 @@ targets:
     type: application
     platform: iOS
     deploymentTarget: "15.0"
-    sources:
-      - path: ./HostApp
-    dependencies:
-      - target: KeyboardExtension
+    sources: 
+      - HostApp # フォルダ名をそのまま指定
     info:
       properties:
         UILaunchScreen: {}
@@ -24,8 +22,8 @@ targets:
     type: app-extension
     platform: iOS
     deploymentTarget: "15.0"
-    sources:
-      - path: ./Keyboard
+    sources: 
+      - Keyboard # フォルダ名をそのまま指定
     dependencies:
       - package: KeyboardKit
     info:
