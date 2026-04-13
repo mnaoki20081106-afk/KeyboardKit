@@ -15,7 +15,7 @@ jobs:
         run: brew install xcodegen
 
       - name: Run xcodegen generate
-        run: xcodegen generate
+        run: xcodegen generate # ルートでそのまま実行
 
       - name: Build and Archive
         run: |
@@ -30,10 +30,8 @@ jobs:
       - name: Export IPA
         run: |
           mkdir -p build/Payload
-          # アーカイブ内のアプリ本体をPayloadディレクトリにコピー
           cp -r build/MathKeyboard.xcarchive/Products/Applications/HostApp.app build/Payload/
           cd build
-          # Payloadディレクトリをzip圧縮してipaファイルを作成
           zip -r MathKeyboard.ipa Payload
           
       - name: Upload Artifact
