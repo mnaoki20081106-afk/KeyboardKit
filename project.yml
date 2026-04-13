@@ -1,0 +1,39 @@
+name: MathKeyboard
+options:
+  bundleIdPrefix: com.math.keyboard
+packages:
+  KeyboardKit:
+    url: https://github.com/KeyboardKit/KeyboardKit.git
+    from: 8.0.0
+targets:
+  HostApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources: [HostApp] # フォルダ名を直接指定（最も安全）
+    info:
+      properties:
+        UILaunchScreen: {}
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        CFBundleDisplayName: "MathKey"
+  KeyboardExtension:
+    type: app-extension
+    platform: iOS
+    deploymentTarget: "15.0"
+    sources: [Keyboard] # フォルダ名を直接指定（最も安全）
+    dependencies:
+      - package: KeyboardKit
+    info:
+      properties:
+        CFBundleShortVersionString: "1.0"
+        CFBundleVersion: "1"
+        CFBundleDisplayName: "Math Keyboard"
+        NSExtension:
+          NSExtensionAttributes:
+            IsASCIICapable: false
+            PrefersRightToLeft: false
+            PrimaryLanguage: en-US
+            RequestsOpenAccess: true
+          NSExtensionPointIdentifier: com.apple.keyboard-service
+          NSExtensionPrincipalClass: "$(PRODUCT_MODULE_NAME).KeyboardViewController"
