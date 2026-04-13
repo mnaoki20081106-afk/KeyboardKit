@@ -11,7 +11,7 @@ targets:
     platform: iOS
     deploymentTarget: "15.0"
     sources:
-      - path: HostApp
+      - path: ./HostApp
     dependencies:
       - target: KeyboardExtension
     info:
@@ -25,7 +25,7 @@ targets:
     platform: iOS
     deploymentTarget: "15.0"
     sources:
-      - path: Keyboard
+      - path: ./Keyboard
     dependencies:
       - package: KeyboardKit
     info:
