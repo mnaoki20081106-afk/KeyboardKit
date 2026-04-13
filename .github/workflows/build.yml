@@ -3,44 +3,39 @@ name: Build IPA
 on:
   push:
     branches: [ main ]
-  workflow_dispatch: # 手動実行を許可
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: macos-latest
-    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Install XcodeGen
-      run: brew install xcodegen
+      - name: Install XcodeGen
+        run: brew install xcodegen
 
-    - name: Generate Xcode Project
-      run: xcodegen generate
+      - name: Run xcodegen generate
+        run: xcodegen generate # ルートでそのまま実行
 
-    - name: Build Application (Unsigned)
-      run: |
-        xcodebuild -project MathKeyboard.xcodeproj \
-          -scheme HostApp \
-          -configuration Release \
-          -sdk iphoneos \
-          CODE_SIGN_IDENTITY="" \
-          CODE_SIGNING_REQUIRED=NO \
-          CODE_SIGNING_ALLOWED=NO \
-          clean build \
-          CONFIGURATION_BUILD_DIR=${{ github.workspace }}/build
+      - name: Build and Archive
+        run: |
+          xcodebuild archive \
+            -project MathKeyboard.xcodeproj \
+            -scheme HostApp \
+            -configuration Release \
+            -archivePath build/MathKeyboard.xcarchive \
+            -sdk iphoneos \
+            CODE_SIGNING_ALLOWED=NO
 
-    - name: Package into IPA
-      run: |
-        mkdir -p Payload
-        # ビルドされた.appをPayloadフォルダに移動
-        mv ${{ github.workspace }}/build/HostApp.app Payload/
-        # Payloadフォルダごとzip圧縮して拡張子を.ipaに変更
-        zip -r MathKeyboard.ipa Payload
-
-    - name: Upload IPA Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: MathKeyboard-IPA
-        path: MathKeyboard.ipa
+      - name: Export IPA
+        run: |
+          mkdir -p build/Payload
+          cp -r build/MathKeyboard.xcarchive/Products/Applications/HostApp.app build/Payload/
+          cd build
+          zip -r MathKeyboard.ipa Payload
+          
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MathKeyboard-IPA
+          path: build/MathKeyboard.ipa
